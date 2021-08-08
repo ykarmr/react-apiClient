@@ -1,26 +1,25 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import { useEffect, useState } from "react";
+import "./App.css";
+import Api from "apiClient/api";
+import { Sample } from "./apiClient/sample/models";
 
-function App() {
+const App = () => {
+  const [view, serView] = useState<Sample>();
+  useEffect(() => {
+    (async () => {
+      const {responseData} = await Api.GetSample()
+      responseData && serView(responseData);
+    })();
+  }, []);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <>
+      <p>{view?.greeting}</p>
+      {view?.instructions?.map((item, index) => {
+        return <p key={index}>{item}</p>;
+      })}
+    </>
   );
-}
+};
 
 export default App;
